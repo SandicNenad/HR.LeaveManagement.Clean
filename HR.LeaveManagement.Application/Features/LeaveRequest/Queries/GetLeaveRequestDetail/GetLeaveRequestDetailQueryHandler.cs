@@ -18,7 +18,7 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveR
         public async Task<LeaveRequestDetailsDto> Handle(GetLeaveRequestDetailQuery request, CancellationToken cancellationToken)
         {
             var leaveRequests = _mapper.Map<LeaveRequestDetailsDto>(await
-                _leaveRequestRepository.GetLeaveRequestsWithDetails(request.Id));
+                _leaveRequestRepository.GetLeaveRequestWithDetails(request.Id));
 
             // Add Employee details as needed
 

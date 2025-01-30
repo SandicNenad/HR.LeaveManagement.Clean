@@ -1,4 +1,6 @@
-﻿using HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveRequestDetail;
+﻿using HR.LeaveManagement.Application.Features.LeaveRequest.Command.CreateLeaveRequest;
+using HR.LeaveManagement.Application.Features.LeaveRequest.Command.UpdateLeaveRequest;
+using HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveRequestDetail;
 using HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveRequestList;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -38,14 +40,25 @@ namespace HR.LeaveManagement.Api.Controllers
 
         // POST api/<LeaveRequestsController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> Post(CreateLeaveRequestCommand leaveRequest)
         {
+            var response = await _mediator.Send(leaveRequest);
+            return CreatedAtAction(nameof(Get), new { id = response });
         }
 
         // PUT api/<LeaveRequestsController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> Put(UpdateLeaveRequestCommand leaveRequest)
         {
+            await _mediator.Send(leaveRequest);
+            return NoContent();
         }
 
         // DELETE api/<LeaveRequestsController>/5

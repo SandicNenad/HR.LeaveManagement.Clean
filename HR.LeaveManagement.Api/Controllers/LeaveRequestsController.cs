@@ -1,4 +1,5 @@
 ﻿using HR.LeaveManagement.Application.Features.LeaveRequest.Command.CreateLeaveRequest;
+using HR.LeaveManagement.Application.Features.LeaveRequest.Command.DeleteLeaveRequest;
 using HR.LeaveManagement.Application.Features.LeaveRequest.Command.UpdateLeaveRequest;
 using HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveRequestDetail;
 using HR.LeaveManagement.Application.Features.LeaveRequest.Queries.GetLeaveRequestList;
@@ -63,8 +64,14 @@ namespace HR.LeaveManagement.Api.Controllers
 
         // DELETE api/<LeaveRequestsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> Delete(int id)
         {
+            var command = new DeleteLeaveRequestCommand { Id = id };
+            await _mediator.Send(command);
+            return NoContent();
         }
     }
 }

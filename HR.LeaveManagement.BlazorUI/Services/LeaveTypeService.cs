@@ -14,9 +14,21 @@ namespace HR.LeaveManagement.BlazorUI.Services
             _mapper = mapper;
         }
 
-        public Task<Response<Guid>> CreateLeaveType(LeaveTypeVM leaveType)
+        public async Task<Response<Guid>> CreateLeaveType(LeaveTypeVM leaveType)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var createLeaveTypeCommand = _mapper.Map<CreateLeaveTypeCommand>(leaveType);
+                await _client.LeaveTypesPOSTAsync(createLeaveTypeCommand);
+                return new Response<Guid>()
+                {
+                    Success = true,
+                };
+            }
+            catch (ApiException ex)
+            {
+                return ConvertApiExceptions<Guid>(ex);
+            }
         }
 
         public Task<Response<Guid>> DeleteLeaveType(int id)

@@ -6,7 +6,12 @@
     <button @onclick="CreateLeaveType" class="btn btn-success">Add Leave Type</button>
 </div>
 
-@Message
+@if (string.IsNullOrEmpty(Message) == false)
+{
+    <div class="alert alert-danger">
+        @Message
+    </div>
+}
 
 @if (LeaveTypes == null)
 {

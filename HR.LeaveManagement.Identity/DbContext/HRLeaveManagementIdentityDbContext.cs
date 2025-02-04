@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HR.LeaveManagement.Identity.DbContext
 {
-    public class HRLeaveManagementIdentityDbContext : IdentityDbContext<ApplicationUser>
+    public class HrLeaveManagementIdentityDbContext : IdentityDbContext<ApplicationUser>
     {
-        public HRLeaveManagementIdentityDbContext
-            (DbContextOptions<HRLeaveManagementIdentityDbContext> options) : base(options)
+        public HrLeaveManagementIdentityDbContext
+            (DbContextOptions<HrLeaveManagementIdentityDbContext> options) : base(options)
         {   
         }
 
@@ -15,7 +15,7 @@ namespace HR.LeaveManagement.Identity.DbContext
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(typeof
-                (HRLeaveManagementIdentityDbContext).Assembly);
+                (HrLeaveManagementIdentityDbContext).Assembly);
         }
     }
 }

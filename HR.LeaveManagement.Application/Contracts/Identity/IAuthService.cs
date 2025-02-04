@@ -2,7 +2,7 @@
 
 namespace HR.LeaveManagement.Application.Contracts.Identity
 {
-    internal interface IAuthService
+    public interface IAuthService
     {
         Task<AuthResponse> Login(AuthRequest request);
         Task<RegistrationResponse> Register(RegistrationRequest request);

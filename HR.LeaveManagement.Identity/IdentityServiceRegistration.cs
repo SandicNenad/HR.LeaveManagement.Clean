@@ -13,7 +13,7 @@ using System.Text;
 
 namespace HR.LeaveManagement.Identity
 {
-    public static class IdentityServicesRegistration
+    public static class IdentityServiceRegistration
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration configuration)
         {

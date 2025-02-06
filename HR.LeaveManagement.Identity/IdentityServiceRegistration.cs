@@ -6,8 +6,10 @@ using HR.LeaveManagement.Identity.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -20,7 +22,8 @@ namespace HR.LeaveManagement.Identity
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
             services.AddDbContext<HrLeaveManagementIdentityDbContext>(options =>
-               options.UseSqlServer(configuration.GetConnectionString("HrDatabaseConnectionString")));
+               options.UseSqlServer(configuration.GetConnectionString("HrDatabaseConnectionString"))
+               .ConfigureWarnings(warnings => warnings.Ignore(RelationalEventId.PendingModelChangesWarning)));
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<HrLeaveManagementIdentityDbContext>()

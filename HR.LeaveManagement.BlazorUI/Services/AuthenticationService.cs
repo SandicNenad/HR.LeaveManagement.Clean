@@ -1,14 +1,21 @@
 ﻿using Blazored.LocalStorage;
 using HR.LeaveManagement.BlazorUI.Contracts;
+using HR.LeaveManagement.BlazorUI.Providers;
 using HR.LeaveManagement.BlazorUI.Services.Base;
+using Microsoft.AspNetCore.Components.Authorization;
 using System.ComponentModel.DataAnnotations;
 
 namespace HR.LeaveManagement.BlazorUI.Services
 {
     public class AuthenticationService : BaseHttpService, IAuthenticationService
     {
-        public AuthenticationService(IClient client, ILocalStorageService localStorage) : base(client, localStorage)
+        private readonly AuthenticationStateProvider _authenticationStateProvider;
+
+        public AuthenticationService(IClient client,
+            ILocalStorageService localStorage,
+            AuthenticationStateProvider authenticationStateProvider) : base(client, localStorage)
         {
+            _authenticationStateProvider = authenticationStateProvider;
         }
 
         public async Task<bool> AuthenticateAsync(string email, string password)
@@ -23,6 +30,7 @@ namespace HR.LeaveManagement.BlazorUI.Services
                     await _localStorage.SetItemAsync("token", authenticationResponse.Token);
 
                     // Set claims in Blazor and login state
+                    await ((ApiAuthenticationStateProvider)_authenticationStateProvider).LoggedIn();
 
                     return true;
                 }
@@ -37,8 +45,8 @@ namespace HR.LeaveManagement.BlazorUI.Services
 
         public async Task Logout()
         {
-            //await _localStorage.RemoveItemAsync("token");
             // Remove claims in Blazor and invalidate login state
+            await ((ApiAuthenticationStateProvider)_authenticationStateProvider).LoggedOut();
         }
 
         public async Task<bool> RegisterAsync(string firstName, string lastName, string userName, string email, string password)

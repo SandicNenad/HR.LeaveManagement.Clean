@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using HR.LeaveManagement.BlazorUI.Contracts;
 using HR.LeaveManagement.BlazorUI.Services.Base;
+using System.ComponentModel.DataAnnotations;
 
 namespace HR.LeaveManagement.BlazorUI.Services
 {
@@ -40,9 +41,17 @@ namespace HR.LeaveManagement.BlazorUI.Services
             // Remove claims in Blazor and invalidate login state
         }
 
-        public Task<bool> RegisterAsync(string firstName, string lastName, string email, string password)
+        public async Task<bool> RegisterAsync(string firstName, string lastName, string userName, string email, string password)
         {
-            throw new NotImplementedException();
+            var registrationRequest = new RegistrationRequest() { FirstName = firstName, LastName = lastName,
+                UserName = userName, Email = email, Password = password };
+            var response = await _client.RegisterAsync(registrationRequest);
+
+            if (!string.IsNullOrEmpty(response.UserId))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

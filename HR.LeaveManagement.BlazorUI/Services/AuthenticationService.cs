@@ -37,7 +37,7 @@ namespace HR.LeaveManagement.BlazorUI.Services
 
         public async Task Logout()
         {
-            await _localStorage.RemoveItemAsync("token");
+            //await _localStorage.RemoveItemAsync("token");
             // Remove claims in Blazor and invalidate login state
         }
 

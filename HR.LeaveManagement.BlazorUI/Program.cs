@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using HR.LeaveManagement.BlazorUI;
 using HR.LeaveManagement.BlazorUI.Contracts;
 using HR.LeaveManagement.BlazorUI.Services;
@@ -15,6 +16,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddHttpClient<IClient, Client>(client => client.BaseAddress =
     new Uri("https://localhost:7254"));
 
+builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<ILeaveTypeService, LeaveTypeService>();
 builder.Services.AddScoped<ILeaveAllocationService, LeaveAllocationService>();
 builder.Services.AddScoped<ILeaveRequestService, LeaveRequestService>();

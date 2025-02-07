@@ -5,12 +5,12 @@ namespace HR.LeaveManagement.BlazorUI.Services.Base
     public class BaseHttpService
     {
         protected IClient _client;
-        private readonly ILocalStorageService _localSotrage;
+        protected readonly ILocalStorageService _localStorage;
 
-        public BaseHttpService(IClient client, ILocalStorageService localSotrage)
+        public BaseHttpService(IClient client, ILocalStorageService localStorage)
         {
             _client = client;
-            _localSotrage = localSotrage;
+            _localStorage = localStorage;
         }
 
         protected Response<Guid> ConvertApiExceptions<Guid>(ApiException ex)

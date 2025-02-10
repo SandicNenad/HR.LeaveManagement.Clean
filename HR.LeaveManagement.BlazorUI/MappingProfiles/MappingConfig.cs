@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HR.LeaveManagement.BlazorUI.Models.LeaveAllocations;
-using HR.LeaveManagement.BlazorUI.Models.LeaveRequest;
+using HR.LeaveManagement.BlazorUI.Models.LeaveRequests;
 using HR.LeaveManagement.BlazorUI.Models.LeaveTypes;
 using HR.LeaveManagement.BlazorUI.Services.Base;
 

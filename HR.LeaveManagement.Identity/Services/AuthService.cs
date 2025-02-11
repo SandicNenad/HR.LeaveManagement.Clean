@@ -37,7 +37,7 @@ namespace HR.LeaveManagement.Identity.Services
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
-            if (result.Succeeded)
+            if (result.Succeeded == false)
             {
                 throw new BadRequestException($"Credentials for'{request.Email} aren't valid'.");
             }
@@ -97,7 +97,7 @@ namespace HR.LeaveManagement.Identity.Services
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("uid",user.Id),
+                new Claim("uid", user.Id)
             }
             .Union(userClaims)
             .Union(roleClaims);
@@ -107,12 +107,11 @@ namespace HR.LeaveManagement.Identity.Services
             var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             var jwtSecurityToken = new JwtSecurityToken(
-                issuer: _jwtSettings.Issuer,
-                audience: _jwtSettings.Audience,
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes),
-                signingCredentials: signingCredentials);
-
+               issuer: _jwtSettings.Issuer,
+               audience: _jwtSettings.Audience,
+               claims: claims,
+               expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes + 60),
+               signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }
     }

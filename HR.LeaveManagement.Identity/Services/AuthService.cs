@@ -14,8 +14,8 @@ namespace HR.LeaveManagement.Identity.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JwtSettings _jwtSettings;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly JwtSettings _jwtSettings;
 
         public AuthService(UserManager<ApplicationUser> userManager,
             IOptions<JwtSettings> jwtSettings,
@@ -39,7 +39,7 @@ namespace HR.LeaveManagement.Identity.Services
 
             if (result.Succeeded == false)
             {
-                throw new BadRequestException($"Credentials for'{request.Email} aren't valid'.");
+                throw new BadRequestException($"Credentials for '{request.Email} aren't valid'.");
             }
 
             JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
@@ -54,6 +54,7 @@ namespace HR.LeaveManagement.Identity.Services
 
             return response;
         }
+
 
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
@@ -75,13 +76,13 @@ namespace HR.LeaveManagement.Identity.Services
             }
             else
             {
-                StringBuilder strBuilder = new StringBuilder();
-                foreach (var error in result.Errors)
+                StringBuilder str = new StringBuilder();
+                foreach (var err in result.Errors)
                 {
-                    strBuilder.AppendFormat("•{0}\n", error.Description);
+                    str.AppendFormat("•{0}\n", err.Description);
                 }
 
-                throw new BadRequestException($"{strBuilder}");
+                throw new BadRequestException($"{str}");
             }
         }
 
@@ -110,9 +111,10 @@ namespace HR.LeaveManagement.Identity.Services
                issuer: _jwtSettings.Issuer,
                audience: _jwtSettings.Audience,
                claims: claims,
-               expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes + 60),
+               expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes),
                signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }
+
     }
 }

@@ -55,7 +55,6 @@ namespace HR.LeaveManagement.Identity.Services
             return response;
         }
 
-
         public async Task<RegistrationResponse> Register(RegistrationRequest request)
         {
             var user = new ApplicationUser
@@ -111,7 +110,7 @@ namespace HR.LeaveManagement.Identity.Services
                issuer: _jwtSettings.Issuer,
                audience: _jwtSettings.Audience,
                claims: claims,
-               expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes),
+               expires: DateTime.Now.AddMinutes(_jwtSettings.DurationInMinutes + 60),
                signingCredentials: signingCredentials);
             return jwtSecurityToken;
         }

@@ -5,25 +5,32 @@ using HR.LeaveManagement.Application.Contracts.Persistance;
 using HR.LeaveManagement.Application.Exceptions;
 using HR.LeaveManagement.Application.Models.Email;
 using MediatR;
+using HR.LeaveManagement.Application.Contracts.Identity;
+using HR.LeaveManagement.Application.Features.LeaveRequest.Command.CancelLeaveRequest;
 
 namespace HR.LeaveManagement.Application.Features.LeaveRequest.Command.CreateLeaveRequest
 {
     public class CreateLeaveRequestCommandHandler : IRequestHandler<CreateLeaveRequestCommand, Unit>
     {
+        private readonly IEmailSender _emailSender;
+        private readonly IMapper _mapper;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly ILeaveRequestRepository _leaveRequestRepository;
-        private readonly IMapper _mapper;
-        private readonly IEmailSender _emailSender;
-        private readonly IAppLogger<CreateLeaveRequestCommandHandler> _logger;
+        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly IUserService _userService;
+        private readonly IAppLogger<CancelLeaveRequestCommandHandler> _logger;
 
-        public CreateLeaveRequestCommandHandler(ILeaveTypeRepository leaveTypeRepository,
-            ILeaveRequestRepository leaveRequestRepository, IMapper mapper,
-            IEmailSender emailSender, IAppLogger<CreateLeaveRequestCommandHandler> logger)
+        public CreateLeaveRequestCommandHandler(IEmailSender emailSender, IMapper mapper,
+            ILeaveTypeRepository leaveTypeRepository, ILeaveRequestRepository leaveRequestRepository,
+            ILeaveAllocationRepository leaveAllocationRepository, IUserService userService,
+            IAppLogger<CancelLeaveRequestCommandHandler> logger)
         {
-            _leaveTypeRepository = leaveTypeRepository;
-            _leaveRequestRepository = leaveRequestRepository;
-            _mapper = mapper;
             _emailSender = emailSender;
+            _mapper = mapper;
+            this._leaveTypeRepository = leaveTypeRepository;
+            this._leaveRequestRepository = leaveRequestRepository;
+            this._leaveAllocationRepository = leaveAllocationRepository;
+            this._userService = userService;
             _logger = logger;
         }
 
@@ -35,23 +42,42 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Command.CreateLea
             if (validationResult.Errors.Any())
                 throw new BadRequestException("Invalid Leave Request", validationResult);
 
-            // Get requesting employee`s id
+            // Get requesting employee's id
+            var employeeId = _userService.UserId;
 
-            // Check on employee`s allocation
+            // Check on employee's allocation
+            var allocation = await _leaveAllocationRepository.GetUserAllocations(employeeId, request.LeaveTypeId);
 
-            // If allocations aren`t enough, return validation error with message
+            // if allocations aren't enough, return validation error with message
+            if (allocation is null)
+            {
+                validationResult.Errors.Add(new FluentValidation.Results.ValidationFailure(nameof(request.LeaveTypeId),
+                    "You do not have any allocations for this leave type."));
+                throw new BadRequestException("Invalid Leave Request", validationResult);
+            }
+
+            int daysRequested = (int)(request.EndDate - request.StartDate).TotalDays;
+            if (daysRequested > allocation.NumberOfDays)
+            {
+                validationResult.Errors.Add(new FluentValidation.Results.ValidationFailure(
+                    nameof(request.EndDate), "You do not have enough days for this request"));
+                throw new BadRequestException("Invalid Leave Request", validationResult);
+            }
 
             // Create leave request
             var leaveRequest = _mapper.Map<Domain.LeaveRequest>(request);
+            leaveRequest.RequestingEmployeeId = employeeId;
+            leaveRequest.DateRequested = DateTime.Now;
             await _leaveRequestRepository.CreateAsync(leaveRequest);
 
+            // send confirmation email
             try
             {
-                // Send confirmation email
                 var email = new EmailMessage
                 {
                     To = string.Empty, /* Get email from employee record */
-                    Body = $"Your Leave Request for {request.StartDate:D} to {request.EndDate:D} has been submitted successfully.",
+                    Body = $"Your leave request for {request.StartDate:D} to {request.EndDate:D} " +
+                        $"has been submitted successfully.",
                     Subject = "Leave Request Submitted"
                 };
 

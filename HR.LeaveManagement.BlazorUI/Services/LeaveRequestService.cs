@@ -33,6 +33,7 @@ namespace HR.LeaveManagement.BlazorUI.Services
         {
             try
             {
+                //await AddBearerToken();
                 var response = new Response<Guid>();
                 CreateLeaveRequestCommand createLeaveRequest = _mapper.Map<CreateLeaveRequestCommand>(leaveRequest);
                 await _client.LeaveRequestsPOSTAsync(createLeaveRequest);
@@ -48,7 +49,7 @@ namespace HR.LeaveManagement.BlazorUI.Services
         {
             try
             {
-                await AddBearerToken();
+                //await AddBearerToken();
                 await _client.LeaveRequestsDELETEAsync(id);
                 return new Response<Guid>();
             }
@@ -76,14 +77,14 @@ namespace HR.LeaveManagement.BlazorUI.Services
 
         public async Task<LeaveRequestVM> GetLeaveRequest(int id)
         {
-            await AddBearerToken();
+            //await AddBearerToken();
             var leaveRequest = await _client.LeaveRequestsGETAsync(id);
             return _mapper.Map<LeaveRequestVM>(leaveRequest);
         }
 
         public async Task<EmployeeLeaveRequestViewVM> GetUserLeaveRequests()
         {
-            await AddBearerToken();
+            //await AddBearerToken();
             var leaveRequests = await _client.LeaveRequestsAllAsync(isLoggedInUser: true);
             var allocations = await _client.LeaveAllocationsAllAsync(isLoggedInUser: true);
 

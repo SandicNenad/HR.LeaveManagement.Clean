@@ -12,6 +12,6 @@ namespace HR.LeaveManagement.BlazorUI.Models.LeaveRequests
         public int PendingRequests { get; set; }
         [Display(Name = "Rejected Requests")]
         public int RejectedRequests { get; set; }
-        public List<LeaveRequestVM> LeaveRequests { get; set; }
+        public List<LeaveRequestVM> LeaveRequests { get; set; } = new List<LeaveRequestVM>();
     }
 }

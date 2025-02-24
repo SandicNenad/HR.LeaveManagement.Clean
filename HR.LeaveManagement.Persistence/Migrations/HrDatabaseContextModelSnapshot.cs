@@ -30,6 +30,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -42,6 +45,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
 
                     b.Property<int>("LeaveTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("NumberOfDays")
                         .HasColumnType("int");
@@ -70,6 +76,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
                     b.Property<bool>("Cancelled")
                         .HasColumnType("bit");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -84,6 +93,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
 
                     b.Property<int>("LeaveTypeId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RequestComments")
                         .HasColumnType("nvarchar(max)");
@@ -110,6 +122,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DateCreated")
                         .HasColumnType("datetime2");
 
@@ -118,6 +133,9 @@ namespace HR.LeaveManagement.Persistence.Migrations
 
                     b.Property<int>("DefaultDays")
                         .HasColumnType("int");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -132,8 +150,8 @@ namespace HR.LeaveManagement.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateCreated = new DateTime(2025, 2, 23, 17, 47, 44, 169, DateTimeKind.Local).AddTicks(5963),
+                            DateModified = new DateTime(2025, 2, 23, 17, 47, 44, 190, DateTimeKind.Local).AddTicks(556),
                             DefaultDays = 10,
                             Name = "Vacation"
                         });

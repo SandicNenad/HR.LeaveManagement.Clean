@@ -1,4 +1,5 @@
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using HR.LeaveManagement.BlazorUI;
 using HR.LeaveManagement.BlazorUI.Contracts;
 using HR.LeaveManagement.BlazorUI.Handlers;
@@ -20,6 +21,7 @@ builder.Services.AddHttpClient<IClient, Client>(client => client.BaseAddress =
     new Uri("https://localhost:7254"))
     .AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
 
+builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
